@@ -94,31 +94,33 @@ SQL Display in UI
 ### Step 2: Open the Application
 
 * Go to **Apps** in Snowsight
-* Open **TEXT_TO_SQL_APP_CLEAN**
-* Launch:
-  **UI → TEXT_TO_QUERY_BUILDER_APP**
+* Open the installed application
+* The Streamlit UI launches automatically
 
 > No manual Streamlit setup is required. The UI is included with the application.
 
 ---
 
-### Step 3: Grant Access to Your Data (Required)
+### Step 3: Grant Cortex AI Access
 
-This application generates SQL queries based on your data.
-To allow the app to understand your schema, you must grant access to your database objects.
-
-Run the following commands:
-
-```sql
-GRANT USAGE ON DATABASE <your_database> TO APPLICATION ROLE APP_PUBLIC;
-GRANT USAGE ON SCHEMA <your_database>.<your_schema> TO APPLICATION ROLE APP_PUBLIC;
-GRANT SELECT ON ALL TABLES IN SCHEMA <your_database>.<your_schema> TO APPLICATION ROLE APP_PUBLIC;
-GRANT SELECT ON FUTURE TABLES IN SCHEMA <your_database>.<your_schema> TO APPLICATION ROLE APP_PUBLIC;
-```
+After installation, go to the **Permissions** tab in Snowsight and grant the **Cortex User** database role when prompted. This allows the application to use Snowflake Cortex AI functions for text-to-SQL conversion.
 
 ---
 
-### Step 4: Use the Application
+### Step 4: Grant Access to Your Data (Required)
+
+This application generates SQL queries based on your data. To allow the app to understand your schema, you must grant access to your database objects.
+
+Run the following commands, replacing `<app_name>` with the name of the installed application and `<your_database>` / `<your_schema>` with your actual database and schema names:
+
+    GRANT USAGE ON DATABASE <your_database> TO APPLICATION <app_name>;
+    GRANT USAGE ON SCHEMA <your_database>.<your_schema> TO APPLICATION <app_name>;
+    GRANT SELECT ON ALL TABLES IN SCHEMA <your_database>.<your_schema> TO APPLICATION <app_name>;
+    GRANT SELECT ON FUTURE TABLES IN SCHEMA <your_database>.<your_schema> TO APPLICATION <app_name>;
+
+---
+
+### Step 5: Use the Application
 
 1. Select your database and schema
 2. Enter a question in plain English
@@ -130,7 +132,7 @@ GRANT SELECT ON FUTURE TABLES IN SCHEMA <your_database>.<your_schema> TO APPLICA
 ### Important Notes
 
 * The application **does not automatically access your data**
-* Access must be explicitly granted by the user
+* Access must be explicitly granted by the consumer
 * The app **generates SQL only** and does not execute queries automatically
 * This ensures full control and security over your data
 
@@ -144,6 +146,7 @@ GRANT SELECT ON FUTURE TABLES IN SCHEMA <your_database>.<your_schema> TO APPLICA
 * Role-based access control enforced
 * Full auditability and lineage
 * Secure Cortex AI integration
+* Uses least-privilege Cortex database role (not full Snowflake DB access)
 
 ---
 
@@ -175,14 +178,14 @@ GRANT SELECT ON FUTURE TABLES IN SCHEMA <your_database>.<your_schema> TO APPLICA
 
 ---
 
-## 12. Marketplace Positioning
+## 12. Required Privileges
 
-This accelerator is ideal for Snowflake Marketplace distribution as it:
-
-* Demonstrates Cortex AI capabilities
-* Enables AI-driven analytics
-* Showcases Streamlit-native applications
-* Supports enterprise data democratization
+| Privilege | Type | Purpose |
+|-----------|------|---------|
+| `cortex_user` database role | Snowflake database role | Access to Cortex AI functions for SQL generation |
+| `USAGE ON DATABASE` | Consumer grant to application | Allows the app to see available schemas |
+| `USAGE ON SCHEMA` | Consumer grant to application | Allows the app to see available tables |
+| `SELECT ON TABLES` | Consumer grant to application | Allows the app to read table metadata for context |
 
 ---
 
